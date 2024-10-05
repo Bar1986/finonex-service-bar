@@ -28,8 +28,8 @@ const revenueBatch = async () => {
         crlfDelay: Infinity
     });
       const mapedData =  await mapData(data)
-       await processData(mapedData);
-       return;
+      return processData(mapedData);
+       
    }
    console.info(`${filename} Not Exist`)
    
@@ -58,6 +58,7 @@ const processData = async (mapedData) => {
                 ,[userId , balance]);
         }
         db.release();
+        console.log('Batch is finished')
 
     }catch(error) {
         console.error(`Failed to process data to DB ${error.message}`);
