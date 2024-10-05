@@ -18,6 +18,7 @@ const pool = new postgres.Pool({
 const app = express();
 const port = process.env.PORT || 8000;
 const filePath = process.env.FILE_PATH || './users_transaction.json';
+const headerAuth = process.env.API_PUBLIC_KEY || 'secret'
 
 app.use(express.json());
 
@@ -44,11 +45,11 @@ const customAuthentication = (header) => (req, res, next) => {
     next();
   };
 
-app.post('/liveEvent',customAuthentication('secret'), (req, res) => {   
+app.post('/liveEvent',customAuthentication(headerAuth), (req, res) => {   
     appendToFile(req.body)
     res.send({message: 'event  added to file'});
 });
-app.get('/userEvents/:userid',customAuthentication('secret'),handleErrorAsync( async (req, res) => {
+app.get('/userEvents/:userid',customAuthentication(headerAuth),handleErrorAsync( async (req, res) => {
         const {userid} = req.params;
        const response =  await retriveFromDB(userid)
         res.status(200)
@@ -68,7 +69,7 @@ const retriveFromDB = async (userId) => {
         const db = await pool.connect();
         const response = await db.query('SELECT * FROM users_revenue WHERE user_id = $1 ', [userId]);
         db.release();
-        return response.rows.length > 0 ? response.rows[0] : {}
+        return response.rows.length > 0 ? response.rows[0] : {userId , message: 'No Data'}
 }
 
 
