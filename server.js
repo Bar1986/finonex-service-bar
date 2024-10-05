@@ -22,8 +22,9 @@ const headerAuth = process.env.API_PUBLIC_KEY || 'secret'
 
 app.use(express.json());
 
-app.use((err,req,res,next)  => {
-    res.status(err.response ? err.response.status : 500).json({error: err.message});
+app.use((err, req, res, next) => {
+    const status = err.response ? err.response.status : 500;
+    res.status(status).json({ error: err.message });
 });
 
 app.listen(port, () => {
@@ -58,11 +59,9 @@ app.get('/userEvents/:userid',customAuthentication(headerAuth),handleErrorAsync(
 
 
 const appendToFile = (data) => {
-    if(fs.existsSync(filePath)) {
-       fs.appendFileSync(filePath, JSON.stringify(data) + '\n');
-       return;
-    }
-    fs.writeFileSync(filePath,JSON.stringify(data) + '\n');
+    fs.existsSync(filePath) 
+    ? fs.appendFileSync(filePath, JSON.stringify(data) + '\n') 
+    : fs.writeFileSync(filePath,JSON.stringify(data) + '\n');
 }
 
 const retriveFromDB = async (userId) => {
