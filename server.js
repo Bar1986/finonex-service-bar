@@ -13,7 +13,7 @@ const pool = new postgres.Pool({
     database: process.env.DB_NAME || 'finonex',
     password: process.env.DB_PASSWORD || '123456',
     port: process.env.DB_PORT || 5432,
-})
+});
 
 const app = express();
 const port = process.env.PORT || 8000;
