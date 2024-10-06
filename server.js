@@ -48,7 +48,7 @@ const customAuthentication = (header) => (req, res, next) => {
 
 app.post('/liveEvent',customAuthentication(headerAuth), (req, res) => {   
     appendToFile(req.body)
-    res.send({message: 'event  added to file'});
+    res.status(201).send({message: 'event  added to file'});
 });
 app.get('/userEvents/:userid',customAuthentication(headerAuth),handleErrorAsync( async (req, res) => {
         const {userid} = req.params;
